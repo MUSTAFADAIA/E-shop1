@@ -18,6 +18,7 @@ const mountRoutes = require("./routes");
 dbConnection();
 //app express
 const app = express();
+<<<<<<< HEAD
 app.use(cors());
 app.options("*", cors());
 
@@ -29,6 +30,13 @@ app.post(
   express.raw({ type: "application/json" }),
   webhookCheckout
 );
+=======
+app.use(cors({
+  origin: 'https://e-shop1-r9s1.onrender.com',
+  credentials: true
+}));
+app.use(compression())
+>>>>>>> bc5f64e7220cc24a490c5b6685a4dd6eef1099dd
 
 //Middlewares
 app.use(express.json());
