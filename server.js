@@ -29,11 +29,6 @@ app.post(
   express.raw({ type: "application/json" }),
   webhookCheckout
 );
-app.use(cors({
-  origin: 'https://e-shop1-r9s1.onrender.com',
-  credentials: true
-}));
-app.use(compression())
 
 //Middlewares
 app.use(express.json());
