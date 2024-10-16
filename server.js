@@ -15,9 +15,10 @@ const mountRoutes = require("./routes");
 dbConnection();
 //app express
 const app = express();
-app.use(cors())
-app.options('*', cors());
-
+app.use(cors({
+  origin: 'https://e-shop1-r9s1.onrender.com',
+  credentials: true
+}));
 app.use(compression())
 
 //Middlewares
