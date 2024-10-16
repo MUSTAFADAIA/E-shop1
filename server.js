@@ -7,7 +7,10 @@ const dbConnection = require("./config/database");
 const ApiError = require("./utills/apiError");
 const globlError = require("./middlewares/errorMiddleware");
 const cors = require("cors");
-const compression = require('compression')
+const compression = require("compression");
+const { webhookCheckout } = require("./services/orderServices");
+const rateLimit = require('express-rate-limit');
+const hpp = require('hpp');
 
 const mountRoutes = require("./routes");
 
@@ -15,8 +18,17 @@ const mountRoutes = require("./routes");
 dbConnection();
 //app express
 const app = express();
-app.use(cors())
-app.use(compression())
+app.use(cors());
+app.options("*", cors());
+
+app.use(compression());
+
+// Checkout webhook
+app.post(
+  "/webhook-checkout",
+  express.raw({ type: "application/json" }),
+  webhookCheckout
+);
 
 //Middlewares
 app.use(express.json());
@@ -30,8 +42,32 @@ if (process.env.NODE_ENV == "development") {
 //   app.use(morgan("prod"));
 //   console.log(`mode: ${process.env.NODE_ENV}`);
 // }
-//Routes
 
+
+//Routes
+// Limit each IP to 100 requests per `window` (here, per 15 minutes)
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100,
+  message:
+    'Too many accounts created from this IP, please try again after an hour',
+});
+
+// Apply the rate limiting middleware to all requests
+app.use('/api', limiter);
+
+// Middleware to protect against HTTP Parameter Pollution attacks
+app.use(
+  hpp({
+    whitelist: [
+      'price',
+      'sold',
+      'quantity',
+      'ratingsAverage',
+      'ratingsQuantity',
+    ],
+  })
+);
 mountRoutes(app);
 
 app.all("*", (req, res, next) => {
