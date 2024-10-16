@@ -9,8 +9,10 @@ const globlError = require("./middlewares/errorMiddleware");
 const cors = require("cors");
 const compression = require("compression");
 const { webhookCheckout } = require("./services/orderServices");
-const rateLimit = require('express-rate-limit');
-const hpp = require('hpp');
+const rateLimit = require("express-rate-limit");
+const hpp = require("hpp");
+const mongoSanitize = require("express-mongo-sanitize");
+const xss = require("xss-clean");
 
 const mountRoutes = require("./routes");
 
@@ -18,7 +20,6 @@ const mountRoutes = require("./routes");
 dbConnection();
 //app express
 const app = express();
-<<<<<<< HEAD
 app.use(cors());
 app.options("*", cors());
 
@@ -30,16 +31,11 @@ app.post(
   express.raw({ type: "application/json" }),
   webhookCheckout
 );
-=======
-app.use(cors({
-  origin: 'https://e-shop1-r9s1.onrender.com',
-  credentials: true
-}));
-app.use(compression())
->>>>>>> bc5f64e7220cc24a490c5b6685a4dd6eef1099dd
+
+app.use(compression());
 
 //Middlewares
-app.use(express.json());
+app.use(express.json({ limit: "20kb" }));
 app.use(express.static(path.join(__dirname, "uploads")));
 
 if (process.env.NODE_ENV == "development") {
@@ -50,7 +46,8 @@ if (process.env.NODE_ENV == "development") {
 //   app.use(morgan("prod"));
 //   console.log(`mode: ${process.env.NODE_ENV}`);
 // }
-
+app.use(mongoSanitize());
+app.use(xss())
 
 //Routes
 // Limit each IP to 100 requests per `window` (here, per 15 minutes)
@@ -58,21 +55,21 @@ const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100,
   message:
-    'Too many accounts created from this IP, please try again after an hour',
+    "Too many accounts created from this IP, please try again after an hour",
 });
 
 // Apply the rate limiting middleware to all requests
-app.use('/api', limiter);
+app.use("/api", limiter);
 
 // Middleware to protect against HTTP Parameter Pollution attacks
 app.use(
   hpp({
     whitelist: [
-      'price',
-      'sold',
-      'quantity',
-      'ratingsAverage',
-      'ratingsQuantity',
+      "price",
+      "sold",
+      "quantity",
+      "ratingsAverage",
+      "ratingsQuantity",
     ],
   })
 );
