@@ -22,7 +22,6 @@ app.use(cors());
 app.options("*", cors());
 
 app.use(compression());
-app.get('/favicon.ico', (req, res) => res.status(204));
 
 // Checkout webhook
 app.post(
