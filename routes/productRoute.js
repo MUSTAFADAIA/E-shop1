@@ -28,7 +28,7 @@ router
   )
   .post(
     AuthService.protect,
-    AuthService.allowedTo("admin", "manager"),
+    AuthService.allowedTo("user","admin", "manager"),
     uploadProductImages,
     resizeProductImages,
     createProductValidator,

@@ -22,12 +22,12 @@ router
   .route("/")
   .get(
     AuthService.protect,
-    AuthService.allowedTo("admin", "manager"),
+    AuthService.allowedTo("user","admin", "manager"),
     getBrands
   )
   .post(
     AuthService.protect,
-    AuthService.allowedTo("admin", "manager"),
+    AuthService.allowedTo("user","admin", "manager"),
     uploadBrandImage,
     resizeImage,
     createBrandValidator,
@@ -37,13 +37,13 @@ router
   .route("/:id")
   .get(
     AuthService.protect,
-    AuthService.allowedTo("admin", "manager"),
+    AuthService.allowedTo("user","admin", "manager"),
     getBrandValidator,
     getBrand
   )
   .put(
     AuthService.protect,
-    AuthService.allowedTo("admin", "manager"),
+    AuthService.allowedTo("user","admin", "manager"),
     uploadBrandImage,
     resizeImage,
     updateBrandValidator,
@@ -51,7 +51,7 @@ router
   )
   .delete(
     AuthService.protect,
-    AuthService.allowedTo("admin", "manager"),
+    AuthService.allowedTo("user","admin", "manager"),
     deleteBrandValidator,
     deleteBrand
   );

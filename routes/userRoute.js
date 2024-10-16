@@ -1,5 +1,4 @@
-
-const express = require('express');
+const express = require("express");
 const {
   getUserValidator,
   createUserValidator,
@@ -7,7 +6,7 @@ const {
   deleteUserValidator,
   changeUserPasswordValidator,
   updateLoggedUserValidator,
-} = require('../utills/validators/userValidator');
+} = require("../utills/validators/userValidator");
 
 const {
   getUsers,
@@ -22,32 +21,32 @@ const {
   updateLoggedUserPassword,
   updateLoggedUserData,
   deleteLoggedUserData,
-} = require('../services/userService');
+} = require("../services/userService");
 
-const authService = require('../services/authService');
+const authService = require("../services/authService");
 
 const router = express.Router();
 
 router.use(authService.protect);
 
-router.get('/getMe', getLoggedUserData, getUser);
-router.put('/changeMyPassword', updateLoggedUserPassword);
-router.put('/updateMe', updateLoggedUserValidator, updateLoggedUserData);
-router.delete('/deleteMe', deleteLoggedUserData);
+router.get("/getMe", getLoggedUserData, getUser);
+router.put("/changeMyPassword", updateLoggedUserPassword);
+router.put("/updateMe", updateLoggedUserValidator, updateLoggedUserData);
+router.delete("/deleteMe", deleteLoggedUserData);
 
 // Admin
-router.use(authService.allowedTo('admin', 'manager'));
+router.use(authService.allowedTo("user", "admin", "manager"));
 router.put(
-  '/changePassword/:id',
+  "/changePassword/:id",
   changeUserPasswordValidator,
   changeUserPassword
 );
 router
-  .route('/')
+  .route("/")
   .get(getUsers)
   .post(uploadUserImage, resizeImage, createUserValidator, createUser);
 router
-  .route('/:id')
+  .route("/:id")
   .get(getUserValidator, getUser)
   .put(uploadUserImage, resizeImage, updateUserValidator, updateUser)
   .delete(deleteUserValidator, deleteUser);

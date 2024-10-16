@@ -38,13 +38,13 @@ router
   .route("/:id")
   .get(
     AuthService.protect,
-    AuthService.allowedTo("admin", "manager"),
+    AuthService.allowedTo("user","admin", "manager"),
     getSubCategoryValidator,
     getsubCategory
   )
   .put(
     AuthService.protect,
-    AuthService.allowedTo("admin", "manager"),
+    AuthService.allowedTo("user","admin", "manager"),
     updateSubCategoryValidator,
     updatesubCategory
   )
