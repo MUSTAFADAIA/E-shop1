@@ -16,6 +16,8 @@ dbConnection();
 //app express
 const app = express();
 app.use(cors())
+app.options('*', cors());
+
 app.use(compression())
 
 //Middlewares
