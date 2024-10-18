@@ -7,10 +7,8 @@ const bcrypt = require("bcryptjs");
 
 const userModel = require("../models/userModel");
 const sendEmail = require("../utills/sendEmail");
-const createToken = (payload) =>
-  jwt.sign({ userId: payload }, process.env.JWT_SECRET_KEY, {
-    expiresIn: process.env.JWT_EXPIRE_TIME,
-  });
+const createToken =require("../utills/createToken")
+
 
 //@desc  Signup
 //@route  GET/api/v1/auth/signup
